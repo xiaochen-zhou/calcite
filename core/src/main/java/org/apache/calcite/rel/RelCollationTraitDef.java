@@ -24,6 +24,8 @@ import org.apache.calcite.rel.logical.LogicalSort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.List;
+
 /**
  * Definition of the ordering trait.
  *
@@ -66,11 +68,16 @@ public class RelCollationTraitDef extends RelTraitDef<RelCollation> {
       RelNode rel,
       RelCollation toCollation,
       boolean allowInfiniteCostConverters) {
-    if (toCollation.getFieldCollations().isEmpty()) {
+    List<RelFieldCollation> toFieldCollations = toCollation.getFieldCollations();
+    if (toFieldCollations.isEmpty()) {
       // An empty sort doesn't make sense.
       return null;
     }
 
+    RelCollation fromCollation = rel.getTraitSet().getCollation();
+    if(fromCollation != null && toFieldCollations.equals(fromCollation.getFieldCollations())){
+      return rel;
+    }
     // Create a logical sort, then ask the planner to convert its remaining
     // traits (e.g. convert it to an EnumerableSortRel if rel is enumerable
     // convention)

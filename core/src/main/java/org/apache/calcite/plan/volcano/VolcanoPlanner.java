@@ -267,7 +267,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
 
   // implement RelOptPlanner
   @Override public boolean isRegistered(RelNode rel) {
-    return mapRel2Subset.get(rel) != null;
+    return mapRel2Subset.containsKey(rel);
   }
 
   @Override public void setRoot(RelNode rel) {
@@ -409,6 +409,9 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     this.materializations.clear();
     this.latticeByName.clear();
     this.provenanceMap.clear();
+    this.registeredSchemas.clear();
+    this.traitDefs.clear();
+    this.ruleCallStack.clear();
   }
 
   @Override public boolean addRule(RelOptRule rule) {
@@ -419,6 +422,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     if (!super.addRule(rule)) {
       return false;
     }
+    boolean isTransFormRule = rule instanceof TransformationRule;
 
     // Each of this rule's operands is an 'entry point' for a rule call.
     // Register each operand against all concrete sub-classes that could match
@@ -426,8 +430,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     for (RelOptRuleOperand operand : rule.getOperands()) {
       for (Class<? extends RelNode> subClass
           : subClasses(operand.getMatchedClass())) {
-        if (PhysicalNode.class.isAssignableFrom(subClass)
-            && rule instanceof TransformationRule) {
+        if (isTransFormRule && PhysicalNode.class.isAssignableFrom(subClass)) {
           continue;
         }
         classOperands.put(subClass, operand);
@@ -740,7 +743,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
       if (inputCost == null) {
         return null;
       }
-      cost = cost.plus(inputCost);
+      cost = cost. plus(inputCost);
     }
     return cost;
   }

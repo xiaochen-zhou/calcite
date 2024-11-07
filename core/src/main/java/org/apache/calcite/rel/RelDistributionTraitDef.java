@@ -52,7 +52,8 @@ public class RelDistributionTraitDef extends RelTraitDef<RelDistribution> {
 
   @Override public @Nullable RelNode convert(RelOptPlanner planner, RelNode rel,
       RelDistribution toDistribution, boolean allowInfiniteCostConverters) {
-    if (toDistribution == RelDistributions.ANY) {
+    RelDistribution fromDistribution = rel.getTraitSet().getDistribution();
+    if (toDistribution == RelDistributions.ANY || toDistribution.equals(fromDistribution)) {
       return rel;
     }
 
