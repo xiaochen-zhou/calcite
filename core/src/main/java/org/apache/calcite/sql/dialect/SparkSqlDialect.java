@@ -115,6 +115,7 @@ public class SparkSqlDialect extends SqlDialect {
   @Override public void unparseCall(SqlWriter writer, SqlCall call,
       int leftPrec, int rightPrec) {
     switch (call.getKind()) {
+    case MULTISET_VALUE_CONSTRUCTOR:
     case ARRAY_VALUE_CONSTRUCTOR:
     case MAP_VALUE_CONSTRUCTOR:
       unparseSparkArrayAndMap(writer, call, leftPrec, rightPrec);

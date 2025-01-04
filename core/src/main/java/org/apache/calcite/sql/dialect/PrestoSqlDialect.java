@@ -84,6 +84,11 @@ public class PrestoSqlDialect extends SqlDialect {
     unparseUsingLimit(writer, offset, fetch);
   }
 
+  @Override
+  public boolean hasImplicitTableAlias() {
+    return false;
+  }
+
   /** Unparses offset/fetch using "OFFSET offset LIMIT fetch " syntax. */
   private static void unparseUsingLimit(SqlWriter writer, @Nullable SqlNode offset,
       @Nullable SqlNode fetch) {
