@@ -4012,6 +4012,10 @@ class SqlToRelConverterTest extends SqlToRelTestBase {
     sql(sql).ok();
   }
 
+
+
+
+
   /**
    * Test case for
    * <a href="https://issues.apache.org/jira/browse/CALCITE-2962">[CALCITE-2962]
