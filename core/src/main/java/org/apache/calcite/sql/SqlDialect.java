@@ -991,7 +991,7 @@ public class SqlDialect {
    * @see #unparseFetchUsingAnsi(SqlWriter, SqlNode, SqlNode)
    * @see #unparseFetchUsingLimit(SqlWriter, SqlNode, SqlNode)
    */
-  public void unparseOffsetFetch(SqlWriter writer, @Nullable SqlNode offset,
+  public void  unparseOffsetFetch(SqlWriter writer, @Nullable SqlNode offset,
       @Nullable SqlNode fetch) {
     unparseFetchUsingAnsi(writer, offset, fetch);
   }

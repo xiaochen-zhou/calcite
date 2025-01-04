@@ -87,6 +87,7 @@ public class HiveSqlDialect extends SqlDialect {
   @Override public void unparseCall(final SqlWriter writer, final SqlCall call,
       final int leftPrec, final int rightPrec) {
     switch (call.getKind()) {
+    case MULTISET_VALUE_CONSTRUCTOR:
     case ARRAY_VALUE_CONSTRUCTOR:
     case MAP_VALUE_CONSTRUCTOR:
       unparseSparkArrayAndMap(writer, call, leftPrec, rightPrec);
