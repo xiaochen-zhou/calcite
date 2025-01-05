@@ -162,6 +162,7 @@ public class MaterializationService {
     actor.keyMap.put(materialization.key, materialization);
     actor.keyBySql.put(queryKey, materialization.key);
     if (tileKey != null) {
+//      actor.keyByTile.put(tileKey, materialization.key);
       actor.keyByTile.put(tileKey, materialization.key);
     }
     return key;
@@ -202,6 +203,7 @@ public class MaterializationService {
         new TileKey(lattice, groupSet, ImmutableList.copyOf(measureList));
 
     // Step 1. Look for an exact match for the tile.
+//    materializationKey = actor.keyByTile.get(tileKey);
     materializationKey = actor.keyByTile.get(tileKey);
     if (materializationKey != null) {
       final CalciteSchema.TableEntry tableEntry =
@@ -218,6 +220,7 @@ public class MaterializationService {
     for (TileKey tileKey1 : actor.tilesByDimensionality.get(tileKey0)) {
       assert tileKey1.dimensions.equals(groupSet);
       if (allSatisfiable(measureList, tileKey1)) {
+//        materializationKey = actor.keyByTile.get(tileKey1);
         materializationKey = actor.keyByTile.get(tileKey1);
         if (materializationKey != null) {
           final CalciteSchema.TableEntry tableEntry =
@@ -241,25 +244,32 @@ public class MaterializationService {
     // TODO: Use a partially-ordered set data structure, so we are not scanning
     // through all tiles.
     if (!exact) {
-      final PriorityQueue<Pair<CalciteSchema.TableEntry, TileKey>> queue =
-          new PriorityQueue<>(1, C);
+      Pair<CalciteSchema.TableEntry, TileKey> bestCandidate = null;
       for (Map.Entry<TileKey, MaterializationKey> entry
-          : actor.keyByTile.entrySet()) {
+          : actor.keyByTile.tailMap(tileKey, true).entrySet()) {
         final TileKey tileKey2 = entry.getKey();
-        if (tileKey2.lattice == lattice
-            && tileKey2.dimensions.contains(groupSet)
-            && !tileKey2.dimensions.equals(groupSet)
-            && allSatisfiable(measureList, tileKey2)) {
+//        if (tileKey2.lattice == lattice
+//            && tileKey2.dimensions.contains(groupSet)
+//            && !tileKey2.dimensions.equals(groupSet)
+//            && allSatisfiable(measureList, tileKey2)) {
+        if (allSatisfiable(measureList, tileKey2)) {
           materializationKey = entry.getValue();
           final CalciteSchema.TableEntry tableEntry =
               checkValid(materializationKey);
           if (tableEntry != null) {
-            queue.add(Pair.of(tableEntry, tileKey2));
+            Pair<CalciteSchema.TableEntry, TileKey> candidate = Pair.of(tableEntry, tileKey2);
+            if (bestCandidate == null || C.compare(candidate, bestCandidate) < 0) {
+              bestCandidate = candidate;
+            }
+          }
+          ImmutableBitSet dimensions = entry.getKey().getDimensions();
+          if (!dimensions.contains(groupSet)) {
+            break;
           }
         }
       }
-      if (!queue.isEmpty()) {
-        return queue.peek();
+      if (bestCandidate != null) {
+        return bestCandidate;
       }
     }
 
@@ -295,10 +305,12 @@ public class MaterializationService {
         // Obsolete all of the narrower tiles.
         for (TileKey tileKey1 : obsolete) {
           actor.tilesByDimensionality.remove(tileKey0, tileKey1);
+//          actor.keyByTile.remove(tileKey1);
           actor.keyByTile.remove(tileKey1);
         }
 
         actor.tilesByDimensionality.put(tileKey0, newTileKey);
+//        actor.keyByTile.put(newTileKey, materializationKey);
         actor.keyByTile.put(newTileKey, materializationKey);
         return Pair.of(tableEntry, newTileKey);
       }

@@ -33,7 +33,7 @@ import java.util.Map;
  * Implementation of {@link TableFactory} for Apache Kafka. Currently an Apache Kafka
  * topic is mapping to a STREAM table.
  */
-public class KafkaTableFactory implements TableFactory<KafkaStreamTable> {
+public class  KafkaTableFactory implements TableFactory<KafkaStreamTable> {
   public KafkaTableFactory() {
   }
 

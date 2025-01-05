@@ -22,12 +22,19 @@ import org.apache.calcite.rel.type.RelDataType;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import org.apache.calcite.schema.Table;
+import org.apache.calcite.util.ImmutableBitSet;
+
+import org.apache.calcite.util.Pair;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -44,7 +51,10 @@ class MaterializationActor {
 
   final Map<QueryKey, MaterializationKey> keyBySql = new HashMap<>();
 
-  final Map<TileKey, MaterializationKey> keyByTile = new HashMap<>();
+//  final Map<TileKey, MaterializationKey> keyByTile = new HashMap<>();
+
+  final TreeMap<TileKey, MaterializationKey> keyByTile =
+      new TreeMap<>(Comparator.comparing(TileKey::getDimensions, ImmutableBitSet.COMPARATOR));
 
   /** Tiles grouped by dimensionality. We use a
    * {@link TileKey} with no measures to represent a

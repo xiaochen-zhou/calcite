@@ -33,6 +33,7 @@ import java.util.Objects;
 public class TileKey {
   public final Lattice lattice;
   public final ImmutableBitSet dimensions;
+
   public final ImmutableList<Lattice.Measure> measures;
 
   /** Creates a TileKey. */
@@ -53,6 +54,10 @@ public class TileKey {
         && lattice == ((TileKey) obj).lattice
         && dimensions.equals(((TileKey) obj).dimensions)
         && measures.equals(((TileKey) obj).measures);
+  }
+
+  public ImmutableBitSet getDimensions() {
+    return dimensions;
   }
 
   @Override public String toString() {
