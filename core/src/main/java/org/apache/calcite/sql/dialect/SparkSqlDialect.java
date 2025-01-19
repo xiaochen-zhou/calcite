@@ -27,6 +27,7 @@ import org.apache.calcite.sql.SqlDialect;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlLiteral;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.SqlUnnestOperator;
 import org.apache.calcite.sql.SqlUtil;
 import org.apache.calcite.sql.SqlWriter;
 import org.apache.calcite.sql.fun.SqlFloorFunction;
@@ -139,10 +140,25 @@ public class SparkSqlDialect extends SqlDialect {
     case POSITION:
       SqlUtil.unparseFunctionSyntax(SqlStdOperatorTable.POSITION, writer, call, false);
       break;
+    case UNNEST:
+      if (call.getOperator() instanceof SqlUnnestOperator
+          && ((SqlUnnestOperator) call.getOperator()).withOrdinality) {
+        writer.keyword("POSEXPLODE");
+      } else {
+        writer.keyword("EXPLODE");
+      }
+      final SqlWriter.Frame frame = writer.startList(SqlWriter.FrameTypeEnum.FUN_CALL, "(", ")");
+      for (SqlNode operand : call.getOperandList()) {
+        writer.sep(",");
+        operand.unparse(writer, 0, 0);
+      }
+      writer.endList(frame);
+      break;
     default:
       super.unparseCall(writer, call, leftPrec, rightPrec);
     }
   }
+
 
   @Override public @Nullable SqlNode getCastSpec(RelDataType type) {
     if (type instanceof BasicSqlType && type.getSqlTypeName() == SqlTypeName.VARCHAR) {
