@@ -80,6 +80,8 @@ public enum SqlTypeFamily implements RelDataTypeFamily {
   FUNCTION,
   VARIANT,
   UUID,
+  HLL,
+  JSON,
   /** Like ANY, but do not even validate the operand. It may not be an
    * expression. */
   IGNORE;

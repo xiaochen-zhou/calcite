@@ -136,7 +136,10 @@ public enum SqlTypeName {
   UUID(PrecScale.NO_NO, false, Types.OTHER, SqlTypeFamily.UUID),
   /** VARIANT data type, a dynamically-typed value that can have at runtime
    * any of the other data types in this table. */
-  VARIANT(PrecScale.NO_NO, false, Types.OTHER, SqlTypeFamily.VARIANT);
+  VARIANT(PrecScale.NO_NO, false, Types.OTHER, SqlTypeFamily.VARIANT),
+
+  HLL(PrecScale.NO_NO, false, Types.OTHER, SqlTypeFamily.HLL),
+  JSON(PrecScale.NO_NO, false, Types.OTHER, SqlTypeFamily.JSON);
 
   public static final int MAX_DATETIME_PRECISION = 3;
 
@@ -169,7 +172,7 @@ public enum SqlTypeName {
           INTERVAL_HOUR_SECOND, INTERVAL_MINUTE, INTERVAL_MINUTE_SECOND,
           INTERVAL_SECOND, TIME_WITH_LOCAL_TIME_ZONE, TIME_TZ,
           TIMESTAMP_WITH_LOCAL_TIME_ZONE, TIMESTAMP_TZ,
-          FLOAT, MULTISET, DISTINCT, STRUCTURED, ROW, CURSOR, COLUMN_LIST, VARIANT);
+          FLOAT, MULTISET, DISTINCT, STRUCTURED, ROW, CURSOR, COLUMN_LIST, VARIANT, HLL);
 
   public static final List<SqlTypeName> BOOLEAN_TYPES =
       ImmutableList.of(BOOLEAN);
@@ -258,7 +261,7 @@ public enum SqlTypeName {
           .put(ExtraSqlTypes.NVARCHAR, VARCHAR)
 
               // TODO: additional types not yet supported. See ExtraSqlTypes.
-              // .put(Types.LONGVARCHAR, Longvarchar)
+              // .put(Types.NVARCHAR, Longvarchar)
               // .put(Types.CLOB, Clob)
               // .put(Types.LONGVARBINARY, Longvarbinary)
               // .put(Types.BLOB, Blob)
