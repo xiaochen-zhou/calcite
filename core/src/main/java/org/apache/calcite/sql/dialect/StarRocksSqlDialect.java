@@ -69,6 +69,7 @@ public class StarRocksSqlDialect extends MysqlSqlDialect {
   public static final SqlDialect.Context DEFAULT_CONTEXT = SqlDialect.EMPTY_CONTEXT
       .withDatabaseProduct(SqlDialect.DatabaseProduct.STARROCKS)
       .withIdentifierQuoteString("`")
+      .withCaseSensitive(false)
       .withDataTypeSystem(STARROCKS_TYPE_SYSTEM)
       .withNullCollation(NullCollation.LOW);
 

@@ -40,6 +40,8 @@ import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParserPos;
 import org.apache.calcite.sql.type.SqlTypeName;
 import org.apache.calcite.sql.type.SqlTypeUtil;
+import org.apache.calcite.sql.validate.SqlConformance;
+import org.apache.calcite.sql.validate.SqlConformanceEnum;
 import org.apache.calcite.util.RelToSqlConverterUtil;
 
 import com.google.common.collect.ImmutableList;
@@ -59,6 +61,8 @@ public class PrestoSqlDialect extends SqlDialect {
       .withDatabaseProduct(DatabaseProduct.PRESTO)
       .withIdentifierQuoteString("\"")
       .withUnquotedCasing(Casing.UNCHANGED)
+      .withConformance(SqlConformanceEnum.PRESTO)
+      .withCaseSensitive(false)
       .withNullCollation(NullCollation.LAST);
 
   public static final SqlDialect DEFAULT = new PrestoSqlDialect(DEFAULT_CONTEXT);
